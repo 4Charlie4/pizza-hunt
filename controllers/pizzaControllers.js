@@ -1,9 +1,18 @@
-const  {Pizza} = require("../models");
+const { Pizza } = require("../models");
 
 const pizzaController = {
   // Grabs all pizzas
   getAllPizza(req, res) {
     Pizza.find({})
+      //Allows us to reference comments through Pizza.
+      .populate({
+        path: "comments",
+        select: "-__v",
+      })
+      //removes __v from being displayed
+      .select("-__v")
+      //sorts pizzas displayed with the newest first
+      .sort({ _id: -1 })
       .then((pizzaData) => res.json(pizzaData))
       .catch((err) => {
         console.log(err);
@@ -13,6 +22,12 @@ const pizzaController = {
 
   getPizzaById({ params }, res) {
     Pizza.findOne({ _id: params.id })
+      .populate({
+        path: "comments",
+        select: "-__v",
+      })
+      .select("-__v")
+
       .then((pizzaData) => {
         if (!pizzaData) {
           res.status(404).json({ message: "No Pizza with this Id" });
