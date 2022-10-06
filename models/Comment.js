@@ -9,9 +9,13 @@ const ReplySchema = new Schema(
     },
     replyBody: {
       type: String,
+      required: "You need to write some text to reply to this comment",
+      trim: true,
     },
     writtenBy: {
       type: String,
+      required: "Let users know who's replying on their comment.",
+      trim: true,
     },
     createdAt: {
       type: Date,
@@ -30,9 +34,13 @@ const CommentSchema = new Schema(
   {
     writtenBy: {
       type: String,
+      required: "Provide a name or nickname",
+      trim: true
     },
     commentBody: {
       type: String,
+      required: "Provide some text",
+      trim: true
     },
     createdAt: {
       type: Date,
@@ -50,7 +58,7 @@ const CommentSchema = new Schema(
   }
 );
 
-CommentSchema.virtual("replyCount").get(function () {
+CommentSchema.virtual("replyCount").get(function() {
   return this.replies.length;
 });
 

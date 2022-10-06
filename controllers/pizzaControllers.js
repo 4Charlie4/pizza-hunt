@@ -48,16 +48,23 @@ const pizzaController = {
   },
 
   updatePizza({ params, body }, res) {
-    Pizza.findOneAndUpdate({ _id: params.id }, body, { new: true })
+    Pizza.findOneAndUpdate({ _id: params.id }, body, {
+      new: true,
+      runValidators: true,
+    })
       .then((pizzaData) => {
         if (!pizzaData) {
-          res.status(404).json({ message: "No pizza with this id" });
+          res.status(404).json({ message: "No pizza found with this id!" });
           return;
         }
         res.json(pizzaData);
       })
-      .catch((err) => res.status(400).json(err));
+      .catch((err) => {
+        res.status(400).json(err);
+        console.log(err);
+      });
   },
+
   deletePizza({ params }, res) {
     Pizza.findOneAndDelete({ _id: params.id })
       .then((pizzaData) => {
